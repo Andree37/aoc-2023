@@ -7,6 +7,7 @@
 void part1()
 {
     int sum_callibrations = 0;
+
     std::istringstream input(R"(1abc2
 pqr3stu8vwx
 a1b2c3d4e5f
