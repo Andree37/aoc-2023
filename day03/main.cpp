@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cctype>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 
@@ -12,7 +13,7 @@ bool is_special(const char c)
 void part1()
 {
     std::istringstream input(
-    R"(467..114..
+        R"(467..114..
 ...*......
 ..35..633.
 ......#...
@@ -121,7 +122,138 @@ void part1()
     std::cout << real_num_counter << std::endl;
 }
 
+void part2()
+{
+    std::istringstream input(
+    R"(467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..)");
+
+    size_t real_num_counter = 0;
+    std::map<std::pair<int, int>, std::vector<int>> all_gears;
+    std::vector matrix(1000, std::vector<char>(1000));
+    std::string line;
+    size_t row = 0;
+    size_t column = 0;
+    while (getline(input, line, '\n'))
+    {
+        column = line.length();
+        for (size_t i = 0; i < line.length(); ++i)
+        {
+            matrix[row][i] = line[i];
+        }
+        ++row;
+    }
+
+    for (int i = 0; i < row; ++i)
+    {
+        bool is_real = false;
+        std::string num;
+        std::set<std::pair<int, int>> gears;
+
+        for (int j = 0; j < column; ++j)
+        {
+            if (isdigit(matrix[i][j]))
+            {
+                num += matrix[i][j];
+
+                std::vector<std::pair<int, int>> coords;
+                if (i - 1 >= 0)
+                {
+                    if (j - 1 >= 0)
+                    {
+                        coords.emplace_back(i - 1, j - 1);
+                    }
+                    if (j + 1 < column)
+                    {
+                        coords.emplace_back(i - 1, j + 1);
+                    }
+                    coords.emplace_back(i - 1, j);
+                }
+                if (i + 1 < row)
+                {
+                    if (j - 1 >= 0)
+                    {
+                        coords.emplace_back(i + 1, j - 1);
+                    }
+                    if (j + 1 < column)
+                    {
+                        coords.emplace_back(i + 1, j + 1);
+                    }
+                    coords.emplace_back(i + 1, j);
+                }
+                if (j - 1 >= 0)
+                {
+                    coords.emplace_back(i, j - 1);
+                }
+
+                if (j + 1 < column)
+                {
+                    coords.emplace_back(i, j + 1);
+                }
+
+                if (i - 1 >= 0)
+                {
+                    coords.emplace_back(i - 1, j);
+                }
+
+                if (i + 1 < row)
+                {
+                    coords.emplace_back(i + 1, j);
+                }
+
+                for (auto [i_coord, j_coord] : coords)
+                {
+                    if (matrix[i_coord][j_coord] == '*')
+                    {
+                        is_real = true;
+                        gears.insert(std::make_pair(i_coord, j_coord));
+                    }
+                }
+            }
+
+            if (j == column - 1 || !isdigit(matrix[i][j]))
+            {
+                if (is_real && !num.empty())
+                {
+                    int actual_num = atoi(num.c_str());
+                    //std::cout << actual_num << std::endl;
+                    for (auto g : gears)
+                    {
+                        all_gears[g].push_back(actual_num);
+                    }
+                }
+                num = "";
+                is_real = false;
+                gears.clear();
+            }
+        }
+    }
+
+    for (auto [_,nums] : all_gears)
+    {
+        if (nums.size() == 2)
+        {
+            int ratio = 1;
+            for (auto n : nums)
+            {
+                ratio *= n;
+                std::cout << n << std::endl;
+            }
+            real_num_counter += ratio;
+        }
+    }
+    std::cout << real_num_counter << std::endl;
+}
+
 int main()
 {
-    part1();
+    part2();
 }
