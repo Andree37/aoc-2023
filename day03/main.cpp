@@ -125,7 +125,7 @@ void part1()
 void part2()
 {
     std::istringstream input(
-    R"(467..114..
+        R"(467..114..
 ...*......
 ..35..633.
 ......#...
@@ -255,5 +255,6 @@ void part2()
 
 int main()
 {
+    part1();
     part2();
 }
