@@ -104,15 +104,12 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11)");
             }
         }
     }
-    for (auto sc : scratchcards)
-    {
-        std::cout << sc.first << " " << sc.second << std::endl;
-    }
+
     std::cout << total << std::endl;
 }
 
 int main()
 {
-    //part1();
+    part1();
     part2();
 }
